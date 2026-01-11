@@ -1,0 +1,38 @@
+:root {
+    /* Brand Colors - Easily changeable for different clients */
+    --brand-primary: #6366f1;
+    --brand-primary-light: #818cf8;
+    --brand-primary-dark: #4f46e5;
+    --brand-secondary: #8b5cf6;
+    --brand-secondary-light: #a78bfa;
+
+    /* Functional Colors */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
+
+    /* Dark Theme Palette (Default) */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-hover: #475569;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Surface & Borders */
+    --surface-glass: rgba(255, 255, 255, 0.05);
+    --border-primary: rgba(148, 163, 184, 0.2);
+    --border-focus: var(--brand-primary);
+
+    /* Mapping tokens to functional names used in the app */
+    --color-primary: var(--brand-primary);
+    --color-primary-light: var(--brand-primary-light);
+    --color-primary-dark: var(--brand-primary-dark);
+    --color-secondary: var(--brand-secondary);
+    --color-secondary-light: var(--brand-secondary-light);
+
+    --gradient-primary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+}
