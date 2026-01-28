@@ -39,6 +39,15 @@ export default function ProductForm() {
         metaTitle: '',
         metaDescription: '',
         slug: '',
+        // Perfume Defaults
+        scentNotes: { top: [], middle: [], base: [] },
+        gender: 'unisex',
+        fragranceFamily: undefined,
+        concentration: undefined,
+        volume: undefined,
+        batchCode: '',
+        productionDate: '',
+        expirationDate: ''
     });
 
     useEffect(() => {
@@ -310,6 +319,162 @@ export default function ProductForm() {
                                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                                     ))}
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-section">
+                        <h2 className="form-section-title">Parfüm Özellikleri</h2>
+                        <div className="form-grid">
+                            <div className="input-group">
+                                <label className="input-label">Koku Ailesi</label>
+                                <select 
+                                    name="fragranceFamily" 
+                                    className="input" 
+                                    value={formData.fragranceFamily || ''} 
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Seçiniz</option>
+                                    <option value="floral">Çiçeksi</option>
+                                    <option value="woody">Odunsu</option>
+                                    <option value="oriental">Oryantal</option>
+                                    <option value="fresh">Fresh</option>
+                                    <option value="citrus">Narenciye</option>
+                                    <option value="fruity">Meyveli</option>
+                                    <option value="spicy">Baharatlı</option>
+                                    <option value="gourmand">Gourmand (Şekerli)</option>
+                                    <option value="aquatic">Sucul</option>
+                                </select>
+                            </div>
+
+                            <div className="input-group">
+                                <label className="input-label">Konsantrasyon</label>
+                                <select 
+                                    name="concentration" 
+                                    className="input" 
+                                    value={formData.concentration || ''} 
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Seçiniz</option>
+                                    <option value="edp">EDP (Eau de Parfum)</option>
+                                    <option value="edt">EDT (Eau de Toilette)</option>
+                                    <option value="edc">EDC (Eau de Cologne)</option>
+                                    <option value="parfum">Parfum / Extrait</option>
+                                    <option value="body_mist">Vücut Spreyi</option>
+                                </select>
+                            </div>
+
+                            <div className="input-group">
+                                <label className="input-label">Cinsiyet</label>
+                                <select 
+                                    name="gender" 
+                                    className="input" 
+                                    value={formData.gender || 'unisex'} 
+                                    onChange={handleChange}
+                                >
+                                    <option value="male">Erkek</option>
+                                    <option value="female">Kadın</option>
+                                    <option value="unisex">Unisex</option>
+                                    <option value="kids">Çocuk</option>
+                                </select>
+                            </div>
+
+                             <div className="input-group">
+                                <label className="input-label">Hacim (ml)</label>
+                                <input 
+                                    type="number" 
+                                    name="volume" 
+                                    className="input" 
+                                    value={formData.volume || ''} 
+                                    onChange={handleChange} 
+                                    placeholder="Örn: 50, 100" 
+                                />
+                            </div>
+
+                            <div className="input-group full-width">
+                                <label className="input-label">Üst Notalar (Virgülle ayırın)</label>
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    placeholder="Örn: Bergamot, Limon, Lavanta"
+                                    value={formData.scentNotes?.top?.join(', ') || ''}
+                                    onChange={(e) => setFormData(prev => ({ 
+                                        ...prev, 
+                                        scentNotes: { 
+                                            ...prev.scentNotes!, 
+                                            top: e.target.value.split(',').map(s => s.trim()) 
+                                        } 
+                                    }))}
+                                />
+                            </div>
+                            <div className="input-group full-width">
+                                <label className="input-label">Orta Notalar</label>
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    placeholder="Örn: Gül, Yasemin"
+                                    value={formData.scentNotes?.middle?.join(', ') || ''}
+                                    onChange={(e) => setFormData(prev => ({ 
+                                        ...prev, 
+                                        scentNotes: { 
+                                            ...prev.scentNotes!, 
+                                            middle: e.target.value.split(',').map(s => s.trim()) 
+                                        } 
+                                    }))}
+                                />
+                            </div>
+                            <div className="input-group full-width">
+                                <label className="input-label">Alt Notalar</label>
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    placeholder="Örn: Misk, Amber, Vanilya"
+                                    value={formData.scentNotes?.base?.join(', ') || ''}
+                                    onChange={(e) => setFormData(prev => ({ 
+                                        ...prev, 
+                                        scentNotes: { 
+                                            ...prev.scentNotes!, 
+                                            base: e.target.value.split(',').map(s => s.trim()) 
+                                        } 
+                                    }))}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Batch Tracking */}
+                    <div className="form-section">
+                        <h2 className="form-section-title">Üretim & Takip (Batch)</h2>
+                        <div className="form-grid">
+                            <div className="input-group">
+                                <label className="input-label">Batch Kodu</label>
+                                <input 
+                                    type="text" 
+                                    name="batchCode" 
+                                    className="input" 
+                                    value={formData.batchCode || ''} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label className="input-label">Üretim Tarihi</label>
+                                <input 
+                                    type="date" 
+                                    name="productionDate" 
+                                    className="input" 
+                                    value={formData.productionDate || ''} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label className="input-label">Son Kullanma Tarihi</label>
+                                <input 
+                                    type="date" 
+                                    name="expirationDate" 
+                                    className="input" 
+                                    value={formData.expirationDate || ''} 
+                                    onChange={handleChange} 
+                                />
                             </div>
                         </div>
                     </div>

@@ -21,6 +21,17 @@ const mapProduct = (p: any): Product => ({
     metaTitle: p.meta_title,
     metaDescription: p.meta_description,
     slug: p.slug,
+
+    // Perfume Specifics
+    scentNotes: p.scent_notes, // expect JSON object {top, middle, base}
+    fragranceFamily: p.fragrance_family,
+    concentration: p.concentration,
+    gender: p.gender,
+    volume: p.volume,
+    batchCode: p.batch_code,
+    productionDate: p.production_date,
+    expirationDate: p.expiration_date,
+
     createdAt: p.created_at,
     updatedAt: p.updated_at
 });
@@ -67,7 +78,15 @@ export const productService = {
                 is_active: product.isActive,
                 meta_title: product.metaTitle,
                 meta_description: product.metaDescription,
-                slug: product.slug
+                slug: product.slug,
+                scent_notes: product.scentNotes,
+                fragrance_family: product.fragranceFamily,
+                concentration: product.concentration,
+                gender: product.gender,
+                volume: product.volume,
+                batch_code: product.batchCode,
+                production_date: product.productionDate || null,
+                expiration_date: product.expirationDate || null
             })
             .select('*, categories(name)')
             .single();
@@ -89,6 +108,15 @@ export const productService = {
         if (product.isFeatured !== undefined) updateData.is_featured = product.isFeatured;
         if (product.categoryId !== undefined) updateData.category_id = product.categoryId;
         if (product.images !== undefined) updateData.images = product.images;
+        
+        if (product.scentNotes !== undefined) updateData.scent_notes = product.scentNotes;
+        if (product.fragranceFamily !== undefined) updateData.fragrance_family = product.fragranceFamily;
+        if (product.concentration !== undefined) updateData.concentration = product.concentration;
+        if (product.gender !== undefined) updateData.gender = product.gender;
+        if (product.volume !== undefined) updateData.volume = product.volume;
+        if (product.batchCode !== undefined) updateData.batch_code = product.batchCode;
+        if (product.productionDate !== undefined) updateData.production_date = product.productionDate || null;
+        if (product.expirationDate !== undefined) updateData.expiration_date = product.expirationDate || null;
 
         const { data, error } = await supabase
             .from('products')

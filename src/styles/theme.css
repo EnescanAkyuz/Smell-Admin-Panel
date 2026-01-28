@@ -1,33 +1,59 @@
 :root {
-    /* Brand Colors - Easily changeable for different clients */
-    --brand-primary: #6366f1;
-    --brand-primary-light: #818cf8;
-    --brand-primary-dark: #4f46e5;
-    --brand-secondary: #8b5cf6;
-    --brand-secondary-light: #a78bfa;
+    /* Brand Palette (from provided logo) */
+    --brand-gold: #d8b24c;
+    --brand-gold-light: #ead38a;
+    --brand-gold-dark: #b98f2a;
+
+    --brand-sage: #6f9589;
+    --brand-sage-light: #9db8af;
+    --brand-sage-dark: #4f756b;
+
+    --ink: #0f1211;
+    --ink-2: #2b3531;
+    --muted: #6a7b74;
+
+    /* Expose RGB for easy rgba() usage */
+    --brand-primary-rgb: 216, 178, 76; /* gold */
+    --brand-secondary-rgb: 111, 149, 137; /* sage */
+
+    /* Brand Colors - used throughout the app */
+    --brand-primary: var(--brand-gold);
+    --brand-primary-light: var(--brand-gold-light);
+    --brand-primary-dark: var(--brand-gold-dark);
+    --brand-secondary: var(--brand-sage);
+    --brand-secondary-light: var(--brand-sage-light);
 
     /* Functional Colors */
-    --color-success: #10b981;
-    --color-warning: #f59e0b;
-    --color-danger: #ef4444;
-    --color-info: #3b82f6;
+    --color-success: #16a34a;
+    --color-warning: #d8b24c;
+    --color-danger: #dc2626;
+    --color-info: var(--brand-sage);
 
-    /* Dark Theme Palette (Default) */
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-hover: #475569;
+    --color-success-light: #4ade80;
+    --color-warning-light: #f1dc8b;
+    --color-danger-light: #f87171;
+    --color-info-light: var(--brand-sage-light);
 
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    /* Light Theme Palette (sage-tinted neutrals) */
+    --bg-primary: #f3f7f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e5efeb;
+    --bg-hover: #c9ded6;
 
-    /* Surface & Borders */
-    --surface-glass: rgba(255, 255, 255, 0.05);
-    --border-primary: rgba(148, 163, 184, 0.2);
+    --text-primary: var(--ink);
+    --text-secondary: var(--ink-2);
+    --text-muted: var(--muted);
+
+    /* Surfaces & Borders */
+    --surface-primary: rgba(255, 255, 255, 0.88);
+    --surface-secondary: rgba(255, 255, 255, 0.75);
+    --surface-glass: rgba(255, 255, 255, 0.65);
+
+    --border-primary: #c9ded6;
+    --border-secondary: #e5efeb;
     --border-focus: var(--brand-primary);
 
-    /* Mapping tokens to functional names used in the app */
+    /* Mappings used by components */
     --color-primary: var(--brand-primary);
     --color-primary-light: var(--brand-primary-light);
     --color-primary-dark: var(--brand-primary-dark);
@@ -35,4 +61,8 @@
     --color-secondary-light: var(--brand-secondary-light);
 
     --gradient-primary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    --gradient-success: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-light) 100%);
+    --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, var(--color-danger-light) 100%);
+
+    --focus-ring: 0 0 0 3px rgba(var(--brand-primary-rgb), 0.25);
 }

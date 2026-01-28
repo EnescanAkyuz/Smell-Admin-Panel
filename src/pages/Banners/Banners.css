@@ -86,7 +86,7 @@
     font-size: var(--text-sm);
     color: var(--color-primary-light);
     padding: 2px 8px;
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(var(--brand-primary-rgb), 0.12);
     border-radius: var(--radius-sm);
 }
 
@@ -151,7 +151,7 @@
     letter-spacing: 0.05em;
     color: var(--color-primary-light);
     padding: 4px 8px;
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(var(--brand-primary-rgb), 0.15);
     border-radius: var(--radius-sm);
 }
 
@@ -217,7 +217,7 @@
 
 .image-upload-area:hover {
     border-color: var(--color-primary);
-    background: rgba(99, 102, 241, 0.05);
+    background: rgba(var(--brand-primary-rgb), 0.05);
 }
 
 .image-upload-area svg {

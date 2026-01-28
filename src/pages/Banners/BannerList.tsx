@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Plus,
     Edit,
@@ -10,16 +10,36 @@ import {
     Link as LinkIcon,
     Star,
 } from 'lucide-react';
-import { banners as initialBanners, showcases as initialShowcases, products } from '../../data/dummyData';
-import type { Banner, Showcase } from '../../types';
+import { bannerService } from '../../services/bannerService';
+import { productService } from '../../services/productService';
+import type { Banner, Showcase, Product } from '../../types';
 import './Banners.css';
 
 export default function BannerList() {
-    const [bannerList, setBannerList] = useState<Banner[]>(initialBanners);
-    const [showcaseList, setShowcaseList] = useState<Showcase[]>(initialShowcases);
+    const [bannerList, setBannerList] = useState<Banner[]>([]);
+    const [showcaseList, setShowcaseList] = useState<Showcase[]>([]);
+    const [productList, setProductList] = useState<Product[]>([]);
     const [activeTab, setActiveTab] = useState<'banners' | 'showcase'>('banners');
     const [showModal, setShowModal] = useState(false);
     const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const [banners, showcases, products] = await Promise.all([
+                    bannerService.getBanners(),
+                    bannerService.getShowcases(),
+                    productService.getAll()
+                ]);
+                setBannerList(banners);
+                setShowcaseList(showcases);
+                setProductList(products);
+            } catch (err) {
+                console.error("Veriler yüklenirken hata:", err);
+            }
+        };
+        loadData();
+    }, []);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -50,40 +70,51 @@ export default function BannerList() {
         setShowModal(true);
     };
 
-    const handleSave = () => {
-        if (editingBanner) {
-            setBannerList(prev => prev.map(b =>
-                b.id === editingBanner.id
-                    ? { ...b, ...formData }
-                    : b
-            ));
-        } else {
-            const newBanner: Banner = {
-                id: Date.now().toString(),
-                ...formData,
-                image: '/banners/placeholder.jpg',
-                order: bannerList.length + 1,
-                createdAt: new Date().toISOString(),
-            };
-            setBannerList(prev => [...prev, newBanner]);
+    const handleSave = async () => {
+        try {
+            if (editingBanner) {
+                const updated = await bannerService.updateBanner(editingBanner.id, formData);
+                setBannerList(prev => prev.map(b =>
+                    b.id === editingBanner.id ? updated : b
+                ));
+            } else {
+                const newBanner = await bannerService.createBanner({
+                    ...formData,
+                    image: '/banners/placeholder.jpg',
+                    order: bannerList.length + 1,
+                });
+                setBannerList(prev => [...prev, newBanner]);
+            }
+            setShowModal(false);
+        } catch (err) {
+            console.error("Banner kaydedilirken hata:", err);
         }
-        setShowModal(false);
     };
 
-    const toggleBannerStatus = (bannerId: string) => {
-        setBannerList(prev => prev.map(b =>
-            b.id === bannerId ? { ...b, isActive: !b.isActive } : b
-        ));
+    const toggleBannerStatus = async (bannerId: string) => {
+        const banner = bannerList.find(b => b.id === bannerId);
+        if(!banner) return;
+        try {
+            const updated = await bannerService.updateBanner(bannerId, { isActive: !banner.isActive });
+            setBannerList(prev => prev.map(b => b.id === bannerId ? updated : b));
+        } catch (err) { console.error(err); }
     };
 
-    const deleteBanner = (bannerId: string) => {
-        setBannerList(prev => prev.filter(b => b.id !== bannerId));
+    const deleteBanner = async (bannerId: string) => {
+         if (!window.confirm('Bu bannerı silmek istediğinize emin misiniz?')) return;
+        try {
+            await bannerService.deleteBanner(bannerId);
+            setBannerList(prev => prev.filter(b => b.id !== bannerId));
+        } catch (err) { console.error(err); }
     };
 
-    const toggleShowcaseStatus = (showcaseId: string) => {
-        setShowcaseList(prev => prev.map(s =>
-            s.id === showcaseId ? { ...s, isActive: !s.isActive } : s
-        ));
+    const toggleShowcaseStatus = async (showcaseId: string) => {
+        const showcase = showcaseList.find(s => s.id === showcaseId);
+        if(!showcase) return;
+        try {
+            const updated = await bannerService.updateShowcase(showcaseId, { isActive: !showcase.isActive });
+            setShowcaseList(prev => prev.map(s => s.id === showcaseId ? updated : s));
+        } catch (err) { console.error(err); }
     };
 
     return (
@@ -196,7 +227,7 @@ export default function BannerList() {
                                         <Edit size={16} />
                                     </button>
                                 </div>
-                            </div>
+                            </div>List
 
                             <h3 className="showcase-title">{showcase.title}</h3>
 

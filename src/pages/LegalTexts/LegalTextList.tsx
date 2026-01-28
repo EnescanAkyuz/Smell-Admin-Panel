@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Edit,
     Eye,
@@ -6,7 +6,7 @@ import {
     FileText,
     Save,
 } from 'lucide-react';
-import { legalTexts as initialLegalTexts } from '../../data/dummyData';
+import { legalTextService } from '../../services/legalTextService';
 import type { LegalText } from '../../types';
 import './LegalTexts.css';
 
@@ -21,16 +21,27 @@ const typeLabels: Record<LegalText['type'], string> = {
 };
 
 export default function LegalTextList() {
-    const [legalTextList, setLegalTextList] = useState<LegalText[]>(initialLegalTexts);
+    const [legalTextList, setLegalTextList] = useState<LegalText[]>([]);
     const [editingText, setEditingText] = useState<LegalText | null>(null);
     const [editedContent, setEditedContent] = useState('');
     const [editedTitle, setEditedTitle] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
-    const toggleStatus = (textId: string) => {
-        setLegalTextList(prev => prev.map(t =>
-            t.id === textId ? { ...t, isActive: !t.isActive } : t
-        ));
+    useEffect(() => {
+        const loadTexts = async () => {
+            const data = await legalTextService.getAll();
+            setLegalTextList(data);
+        };
+        loadTexts();
+    }, []);
+
+    const toggleStatus = async (textId: string) => {
+        const text = legalTextList.find(t => t.id === textId);
+        if(!text) return;
+        try {
+            const updated = await legalTextService.update(textId, { isActive: !text.isActive });
+            setLegalTextList(prev => prev.map(t => t.id === textId ? updated : t));
+        } catch (err) { console.error(err); }
     };
 
     const openEditor = (text: LegalText) => {
@@ -49,17 +60,21 @@ export default function LegalTextList() {
         if (!editingText) return;
 
         setIsSaving(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
+        try {
+            const updated = await legalTextService.update(editingText.id, {
+                title: editedTitle,
+                content: editedContent
+            });
 
-        setLegalTextList(prev => prev.map(t =>
-            t.id === editingText.id
-                ? { ...t, title: editedTitle, content: editedContent, updatedAt: new Date().toISOString() }
-                : t
-        ));
-
-        setIsSaving(false);
-        closeEditor();
+            setLegalTextList(prev => prev.map(t =>
+                t.id === editingText.id ? updated : t
+            ));
+            closeEditor();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const formatDate = (dateString: string) => {

@@ -19,29 +19,52 @@ export interface LoginLog {
 }
 
 // Product Types
+export type FragranceFamily = 'floral' | 'woody' | 'oriental' | 'fresh' | 'citrus' | 'fruity' | 'spicy' | 'gourmand' | 'aquatic';
+export type Concentration = 'edp' | 'edt' | 'edc' | 'parfum' | 'body_mist';
+export type Gender = 'male' | 'female' | 'unisex' | 'kids';
+
+export interface ProductScentNotes {
+  top: string[];
+  middle: string[];
+  base: string[];
+}
+
 export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  shortDescription: string;
-  price: number;
-  discountedPrice?: number;
-  currency: string;
-  vatRate: number;
-  stock: number;
-  sku: string;
-  barcode?: string;
-  categoryId: string;
-  categoryName: string;
-  variants?: ProductVariant[];
-  images: string[];
-  isFeatured: boolean;
-  isActive: boolean;
-  metaTitle?: string;
-  metaDescription?: string;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
+    id: string;
+    name: string;
+    description: string;
+    shortDescription: string;
+    price: number;
+    discountedPrice?: number;
+    currency: string;
+    vatRate: number;
+    stock: number;
+    sku: string;
+    barcode?: string;
+    categoryId: string;
+    categoryName: string;
+    variants?: ProductVariant[];
+    images: string[];
+    isFeatured: boolean;
+    isActive: boolean;
+    metaTitle?: string;
+    metaDescription?: string;
+    slug: string;
+    
+    // Perfume Specific Attributes
+    scentNotes?: ProductScentNotes;
+    fragranceFamily?: FragranceFamily;
+    concentration?: Concentration;
+    gender?: Gender;
+    volume?: number; // in ml
+    
+    // Inventory & Batch Tracking
+    batchCode?: string;
+    productionDate?: string;
+    expirationDate?: string;
+
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface ProductVariant {

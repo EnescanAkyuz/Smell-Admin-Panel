@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Search,
     Filter,
@@ -9,7 +9,7 @@ import {
     Star,
     MessageSquare,
 } from 'lucide-react';
-import { reviews as initialReviews } from '../../data/dummyData';
+import { reviewService } from '../../services/reviewService';
 import type { Review } from '../../types';
 import './Reviews.css';
 
@@ -22,9 +22,24 @@ const formatDate = (dateString: string) => {
 };
 
 export default function ReviewList() {
-    const [reviewList, setReviewList] = useState<Review[]>(initialReviews);
+    const [reviewList, setReviewList] = useState<Review[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'spam'>('all');
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const data = await reviewService.getAll();
+                setReviewList(data);
+            } catch (error) {
+                console.error("Yorumlar yüklenirken hata:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchReviews();
+    }, []);
 
     const filteredReviews = reviewList.filter((review) => {
         const matchesSearch =
@@ -37,14 +52,25 @@ export default function ReviewList() {
         return matchesSearch && matchesStatus;
     });
 
-    const updateStatus = (reviewId: string, status: Review['status']) => {
-        setReviewList(prev => prev.map(r =>
-            r.id === reviewId ? { ...r, status } : r
-        ));
+    const updateStatus = async (reviewId: string, status: Review['status']) => {
+        try {
+            await reviewService.updateStatus(reviewId, status);
+            setReviewList(prev => prev.map(r =>
+                r.id === reviewId ? { ...r, status } : r
+            ));
+        } catch (error) {
+            console.error("Durum güncellenirken hata:", error);
+        }
     };
 
-    const deleteReview = (reviewId: string) => {
-        setReviewList(prev => prev.filter(r => r.id !== reviewId));
+    const deleteReview = async (reviewId: string) => {
+        if (!window.confirm('Bu yorumu silmek istediğinize emin misiniz?')) return;
+        try {
+            await reviewService.delete(reviewId);
+            setReviewList(prev => prev.filter(r => r.id !== reviewId));
+        } catch (error) {
+            console.error("Yorum silinirken hata:", error);
+        }
     };
 
     const renderStars = (rating: number) => {

@@ -11,7 +11,7 @@ export const SETTINGS = {
         LEGAL_TEXTS: true,
     },
     BRANDING: {
-        PRIMARY_COLOR: '#7c3aed',
-        SECONDARY_COLOR: '#4f46e5',
+        PRIMARY_COLOR: '#d8b24c',
+        SECONDARY_COLOR: '#6f9589',
     }
 };

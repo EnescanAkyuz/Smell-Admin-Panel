@@ -174,19 +174,19 @@
 }
 
 .status-btn.active.warning {
-    background: rgba(245, 158, 11, 0.15);
+    background: rgba(var(--brand-primary-rgb), 0.15);
     border-color: var(--color-warning);
     color: var(--color-warning);
 }
 
 .status-btn.active.info {
-    background: rgba(59, 130, 246, 0.15);
+    background: rgba(var(--brand-secondary-rgb), 0.15);
     border-color: var(--color-info);
     color: var(--color-info);
 }
 
 .status-btn.active.primary {
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(var(--brand-primary-rgb), 0.15);
     border-color: var(--color-primary);
     color: var(--color-primary-light);
 }
